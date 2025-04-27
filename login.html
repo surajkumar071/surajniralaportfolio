@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login Form</title>
+    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 20px;
+        }
+
+        .container {
+            width: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .login-card {
+            width: 100%;
+            max-width: 450px;
+            background: rgba(255, 255, 255, 0.9);
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.2);
+        }
+
+        .login-header {
+            background: linear-gradient(90deg, #6a11cb 0%, #2575fc 100%);
+            padding: 30px 0;
+            text-align: center;
+            position: relative;
+        }
+
+        .login-header h1 {
+            color: white;
+            font-size: clamp(28px, 6vw, 32px);
+            letter-spacing: 1px;
+            margin-bottom: 5px;
+        }
+
+        .login-header p {
+            color: rgba(255, 255, 255, 0.8);
+            font-size: 14px;
+        }
+
+        .login-body {
+            padding: 40px 30px;
+        }
+
+        .input-group {
+            position: relative;
+            margin-bottom: 25px;
+        }
+
+        .input-group i {
+            position: absolute;
+            left: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 20px;
+            color: #6a11cb;
+        }
+
+        .input-group input {
+            width: 100%;
+            padding: 15px 15px 15px 45px;
+            border: none;
+            border-radius: 30px;
+            background: rgba(255, 255, 255, 0.8);
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            font-size: 16px;
+            transition: all 0.3s;
+            outline: none;
+        }
+
+        .input-group input:focus {
+            box-shadow: 0 5px 15px rgba(106, 17, 203, 0.3);
+        }
+
+        .login-options {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .remember-me {
+            display: flex;
+            align-items: center;
+        }
+
+        .remember-me input {
+            margin-right: 5px;
+            accent-color: #6a11cb;
+        }
+
+        .forgot-password {
+            color: #6a11cb;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 14px;
+            transition: all 0.3s;
+        }
+
+        .forgot-password:hover {
+            color: #2575fc;
+            text-decoration: underline;
+        }
+
+        .login-button {
+            width: 100%;
+            padding: 15px;
+            background: linear-gradient(90deg, #6a11cb 0%, #2575fc 100%);
+            border: none;
+            border-radius: 30px;
+            color: white;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            box-shadow: 0 5px 15px rgba(106, 17, 203, 0.4);
+        }
+
+        .login-button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(106, 17, 203, 0.5);
+        }
+
+        .register-link {
+            text-align: center;
+            margin-top: 25px;
+            font-size: 15px;
+            color: #555;
+        }
+
+        .register-link a {
+            color: #6a11cb;
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s;
+        }
+
+        .register-link a:hover {
+            color: #2575fc;
+            text-decoration: underline;
+        }
+
+        .social-login {
+            margin-top: 30px;
+            text-align: center;
+        }
+
+        .social-login p {
+            position: relative;
+            margin-bottom: 20px;
+            color: #555;
+        }
+
+        .social-login p::before,
+        .social-login p::after {
+            content: "";
+            position: absolute;
+            width: 40%;
+            height: 1px;
+            background-color: #ddd;
+            top: 50%;
+        }
+
+        .social-login p::before {
+            left: 0;
+        }
+
+        .social-login p::after {
+            right: 0;
+        }
+
+        .social-icons {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+        }
+
+        .social-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: white;
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .social-icon:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .social-icon i {
+            font-size: 20px;
+        }
+
+        .social-icon.facebook i {
+            color: #3b5998;
+        }
+
+        .social-icon.google i {
+            color: #db4437;
+        }
+
+        .social-icon.twitter i {
+            color: #1da1f2;
+        }
+
+        /* Responsive adjustments */
+        @media (max-width: 480px) {
+            .login-body {
+                padding: 30px 20px;
+            }
+
+            .login-options {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 15px;
+            }
+
+            .input-group input {
+                font-size: 14px;
+                padding: 12px 12px 12px 40px;
+            }
+
+            .input-group i {
+                font-size: 18px;
+            }
+
+            .login-button {
+                padding: 12px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <div class="login-card">
+            <div class="login-header">
+                <h1>Welcome Back</h1>
+                <p>Please login to continue</p>
+            </div>
+            <div class="login-body">
+                <form action="">
+                    <div class="input-group">
+                        <i class='bx bxs-user'></i>
+                        <input type="text" placeholder="Username or Email" required>
+                    </div>
+                    <div class="input-group">
+                        <i class='bx bxs-lock-alt'></i>
+                        <input type="password" placeholder="Password" required>
+                    </div>
+
+                    <div class="login-options">
+                        <label class="remember-me">
+                            <input type="checkbox">
+                            Remember me
+                        </label>
+                        <a href="#" class="forgot-password">Forgot password?</a>
+                    </div>
+
+                    <button type="submit" class="login-button">Login</button>
+
+                    <div class="register-link">
+                        <p>Don't have an account? <a href="signup.html">Sign Up</a></p>
+                    </div>
+
+                    <div class="social-login">
+                        <p>Or login with</p>
+                        <div class="social-icons">
+                            <div class="social-icon facebook">
+                                <i class='bx bxl-facebook'></i>
+                            </div>
+                            <div class="social-icon google">
+                                <i class='bx bxl-google'></i>
+                            </div>
+                            <div class="social-icon twitter">
+                                <i class='bx bxl-twitter'></i>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

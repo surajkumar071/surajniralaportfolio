@@ -1,0 +1,566 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Multi Search</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Arial, sans-serif;
+        }
+
+        body {
+            line-height: 1.6;
+            color: #333;
+            background-color: #f5f5f5;
+        }
+
+        .header {
+            width: 100%;
+            min-height: 100vh;
+            background: linear-gradient(135deg, #1a2a6c, #b21f1f, #fdbb2d);
+            background-size: 400% 400%;
+            animation: gradient 15s ease infinite;
+            position: relative;
+            color: white;
+        }
+
+        @keyframes gradient {
+            0% { background-position: 0% 80%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        .nav {
+            display: flex;
+            padding: 1.5% 6%;
+            justify-content: space-between;
+            align-items: center;
+            background-color: rgba(0, 0, 0, 0.2);
+            backdrop-filter: blur(5px);
+        }
+
+        .logo {
+            font-size: 1.8rem;
+            font-weight: bold;
+            color: white;
+            text-decoration: none;
+        }
+
+        .nav-links {
+            display: flex;
+        }
+
+        .nav-links ul {
+            display: flex;
+        }
+
+        .nav-links ul li {
+            list-style: none;
+            margin: 0 15px;
+        }
+
+        .nav-links ul li a {
+            color: white;
+            text-decoration: none;
+            font-size: 16px;
+            transition: 0.3s;
+            padding: 8px 12px;
+            border-radius: 20px;
+        }
+
+        .nav-links ul li a:hover {
+            background-color: rgba(255, 255, 255, 0.2);
+        }
+
+        .nav-links ul li a.active {
+            background-color: rgba(255, 255, 255, 0.3);
+        }
+
+        .menu-toggle {
+            display: none;
+            cursor: pointer;
+            font-size: 24px;
+        }
+
+        .content {
+            width: 90%;
+            max-width: 1200px;
+            color: white;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            text-align: center;
+        }
+
+        .content h1 {
+            font-size: 3.5rem;
+            margin-bottom: 20px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+        }
+
+        .content p {
+            margin: 10px 0 40px;
+            font-size: 1.2rem;
+            color: white;
+        }
+
+        .search-container {
+            position: relative;
+            max-width: 700px;
+            margin: 0 auto;
+        }
+
+        .search-tabs {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        .search-tab {
+            padding: 10px 20px;
+            background-color: rgba(255, 255, 255, 0.15);
+            border-radius: 20px;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+        .search-tab:hover {
+            background-color: rgba(255, 255, 255, 0.25);
+        }
+
+        .search-tab.active {
+            background-color: rgba(255, 255, 255, 0.3);
+            font-weight: bold;
+        }
+
+        .search-box {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-top: 20px;
+            position: relative;
+        }
+
+        .search-box input {
+            width: 100%;
+            padding: 15px 20px;
+            font-size: 18px;
+            border: none;
+            border-radius: 30px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+            padding-right: 50px;
+        }
+
+        .search-box input:focus {
+            outline: none;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.3);
+        }
+
+        .search-box button {
+            position: absolute;
+            right: 5px;
+            padding: 12px;
+            background-color: #4285f4;
+            color: white;
+            border: none;
+            border-radius: 50%;
+            cursor: pointer;
+            transition: 0.3s;
+            width: 45px;
+            height: 45px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .search-box button:hover {
+            background-color: #3367d6;
+        }
+
+        .search-box button i {
+            font-size: 20px;
+        }
+
+        .search-results {
+            margin-top: 40px;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 15px;
+            padding: 20px;
+            max-height: 400px;
+            overflow-y: auto;
+            color: #333;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+            text-align: left;
+        }
+
+        .search-info {
+            font-size: 0.9rem;
+            color: #666;
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #eee;
+        }
+
+        .result-item {
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid #eee;
+        }
+
+        .result-item:last-child {
+            border-bottom: none;
+        }
+
+        .result-title {
+            color: #1a0dab;
+            font-size: 1.2rem;
+            margin-bottom: 5px;
+            text-decoration: none;
+            display: block;
+        }
+
+        .result-title:hover {
+            text-decoration: underline;
+        }
+
+        .result-url {
+            color: #006621;
+            font-size: 0.9rem;
+            margin-bottom: 5px;
+        }
+
+        .result-snippet {
+            font-size: 0.95rem;
+            color: #545454;
+        }
+
+        .search-suggestions {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 10px;
+            margin-top: 20px;
+        }
+
+        .search-suggestion {
+            background-color: rgba(255, 255, 255, 0.2);
+            padding: 8px 15px;
+            border-radius: 20px;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+        .search-suggestion:hover {
+            background-color: rgba(255, 255, 255, 0.3);
+        }
+
+        .loading {
+            text-align: center;
+            padding: 20px;
+            font-size: 18px;
+            color: #666;
+        }
+
+        .loading-spinner {
+            display: inline-block;
+            width: 30px;
+            height: 30px;
+            border: 3px solid rgba(0, 0, 0, 0.1);
+            border-radius: 50%;
+            border-top-color: #4285f4;
+            animation: spin 1s ease-in-out infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        /* Responsive styles */
+        @media(max-width: 900px) {
+            .content h1 {
+                font-size: 2.8rem;
+            }
+        }
+
+        @media(max-width: 768px) {
+            .menu-toggle {
+                display: block;
+            }
+
+            .nav-links {
+                position: absolute;
+                background-color: rgba(0, 0, 0, 0.9);
+                height: 100vh;
+                width: 200px;
+                top: 0;
+                right: -200px;
+                text-align: left;
+                z-index: 2;
+                transition: 0.5s;
+                padding-top: 60px;
+            }
+
+            .nav-links ul {
+                flex-direction: column;
+            }
+
+            .nav-links ul li {
+                margin: 10px 20px;
+            }
+
+            .content h1 {
+                font-size: 2.2rem;
+            }
+
+            .search-tabs {
+                flex-wrap: wrap;
+            }
+        }
+
+        @media(max-width: 500px) {
+            .content h1 {
+                font-size: 1.8rem;
+            }
+
+            .content p {
+                font-size: 1rem;
+            }
+
+            .search-box input {
+                padding: 12px 15px;
+                font-size: 16px;
+            }
+
+            .search-results {
+                padding: 15px;
+            }
+        }
+    </style>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <section class="header">
+        <nav class="nav">
+            <a href="#" class="logo">SikhoYaaro</a>
+            <div class="nav-links" id="navLinks">
+                <ul>
+                    <li><a href="Index.html" class="active">Home</a></li>
+                    <li><a href="#">About</a></li>
+                    <li><a href="contact.html">Contact</a></li>
+                </ul>
+            </div>
+            <div class="menu-toggle" onclick="toggleMenu()">
+                <i class="fas fa-bars"></i>
+            </div>
+        </nav>
+
+        <div class="content">
+            <h1>Search Across Multiple Sources</h1>
+            
+            <div class="search-container">
+                <div class="search-tabs">
+                    <div class="search-tab active" data-source="web">Web</div>
+                    <div class="search-tab" data-source="images">Images</div>
+                    <div class="search-tab" data-source="videos">Videos</div>
+                    <div class="search-tab" data-source="news">News</div>
+                    <div class="search-tab" data-source="maps">Maps</div>
+                </div>
+                
+                <div class="search-box">
+                    <input type="text" id="searchInput" placeholder="Search anything...">
+                    <button onclick="performSearch()">
+                        <i class="fas fa-search"></i>
+                    </button>
+                </div>
+
+                <div class="search-suggestions">
+                    <div class="search-suggestion" onclick="setSearchQuery('latest technology')">Latest Technology</div>
+                    <div class="search-suggestion" onclick="setSearchQuery('travel destinations')">Travel Destinations</div>
+                    <div class="search-suggestion" onclick="setSearchQuery('healthy recipes')">Healthy Recipes</div>
+                    <div class="search-suggestion" onclick="setSearchQuery('coding tutorials')">Coding Tutorials</div>
+                </div>
+            </div>
+            
+            <div id="searchResults" class="search-results" style="display: none;">
+                <!-- Search results will be displayed here -->
+            </div>
+        </div>
+    </section>
+
+    <script>
+        // Toggle mobile menu
+        function toggleMenu() {
+            const navLinks = document.getElementById('navLinks');
+            if (navLinks.style.right === '0px') {
+                navLinks.style.right = '-200px';
+            } else {
+                navLinks.style.right = '0px';
+            }
+        }
+
+        // Set search query from suggestions
+        function setSearchQuery(query) {
+            document.getElementById('searchInput').value = query;
+            performSearch();
+        }
+
+        // Switch between search tabs
+        document.querySelectorAll('.search-tab').forEach(tab => {
+            tab.addEventListener('click', function() {
+                // Remove active class from all tabs
+                document.querySelectorAll('.search-tab').forEach(t => {
+                    t.classList.remove('active');
+                });
+                // Add active class to clicked tab
+                this.classList.add('active');
+                
+                // Update placeholder based on selected tab
+                const searchInput = document.getElementById('searchInput');
+                const source = this.getAttribute('data-source');
+                
+                switch(source) {
+                    case 'images':
+                        searchInput.placeholder = 'Search for images...';
+                        break;
+                    case 'videos':
+                        searchInput.placeholder = 'Search for videos...';
+                        break;
+                    case 'news':
+                        searchInput.placeholder = 'Search for news...';
+                        break;
+                    case 'maps':
+                        searchInput.placeholder = 'Search for locations...';
+                        break;
+                    default:
+                        searchInput.placeholder = 'Search anything...';
+                }
+                
+                // If there are already search results, perform search with new tab
+                if (document.getElementById('searchResults').style.display !== 'none') {
+                    performSearch();
+                }
+            });
+        });
+
+        // Perform search based on active tab
+        function performSearch() {
+            const searchInput = document.getElementById('searchInput');
+            const searchResults = document.getElementById('searchResults');
+            const query = searchInput.value.trim();
+            
+            if (query === '') {
+                alert('Please enter a search term');
+                return;
+            }
+
+            // Get active tab/source
+            const activeTab = document.querySelector('.search-tab.active');
+            const source = activeTab ? activeTab.getAttribute('data-source') : 'web';
+            
+            // Show loading
+            searchResults.style.display = 'block';
+            searchResults.innerHTML = `
+                <div class="loading">
+                    <div class="loading-spinner"></div>
+                    <p>Searching ${source}...</p>
+                </div>
+            `;
+
+            // For demonstration, we'll use Wikipedia API for web searches
+            // In a real app, you would use different APIs based on the selected source
+            if (source === 'web') {
+                // Wikipedia Search API
+                fetch(`https://en.wikipedia.org/w/api.php?action=query&list=search&format=json&srsearch=${encodeURIComponent(query)}&origin=*`)
+                    .then(response => response.json())
+                    .then(data => {
+                        const results = data.query.search;
+                        
+                        if (results.length === 0) {
+                            searchResults.innerHTML = `
+                                <div class="search-info">
+                                    No results found for "${query}"
+                                </div>
+                                <p>Try different keywords or check your spelling</p>
+                            `;
+                            return;
+                        }
+
+                        // Show search info
+                        searchResults.innerHTML = `
+                            <div class="search-info">
+                                About ${data.query.searchinfo.totalhits.toLocaleString()} results for "${query}"
+                            </div>
+                        `;
+
+                        // Add each result
+                        results.forEach(result => {
+                            const resultItem = document.createElement('div');
+                            resultItem.className = 'result-item';
+                            
+                            // Create title with link
+                            const title = document.createElement('a');
+                            title.className = 'result-title';
+                            title.href = `https://en.wikipedia.org/wiki/${encodeURIComponent(result.title)}`;
+                            title.target = '_blank';
+                            title.textContent = result.title;
+                            
+                            // Create URL display
+                            const url = document.createElement('div');
+                            url.className = 'result-url';
+                            url.textContent = `en.wikipedia.org › wiki › ${result.title.replace(/ /g, '_')}`;
+                            
+                            // Create snippet
+                            const snippet = document.createElement('div');
+                            snippet.className = 'result-snippet';
+                            // Remove HTML tags from snippet
+                            snippet.innerHTML = result.snippet.replace(/<\/?span[^>]*>/g, '');
+                            
+                            // Add all elements to the result item
+                            resultItem.appendChild(title);
+                            resultItem.appendChild(url);
+                            resultItem.appendChild(snippet);
+                            
+                            // Add result item to results container
+                            searchResults.appendChild(resultItem);
+                        });
+                    })
+                    .catch(error => {
+                        searchResults.innerHTML = `
+                            <div class="search-info">
+                                Error fetching results
+                            </div>
+                            <p>Please try again later. The search service might be temporarily unavailable.</p>
+                        `;
+                        console.error('Search Error:', error);
+                    });
+            } else {
+                // For other search types (demo only)
+                setTimeout(() => {
+                    searchResults.innerHTML = `
+                        <div class="search-info">
+                            Showing ${source} results for "${query}"
+                        </div>
+                        <div class="result-item">
+                            <p>This is a demonstration of the ${source} search feature.</p>
+                            <p>In a real application, this would connect to a ${source} API to show actual results.</p>
+                        </div>
+                    `;
+                }, 1500);
+            }
+        }
+
+        // Allow searching by pressing Enter key
+        document.getElementById('searchInput').addEventListener('keypress', function(event) {
+            if (event.key === 'Enter') {
+                performSearch();
+            }
+        });
+    </script>
+</body>
+</html>

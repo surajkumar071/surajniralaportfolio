@@ -1,0 +1,407 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Contact Us </title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary-color: #4361ee;
+            --secondary-color: #3f37c9;
+            --accent-color: #4cc9f0;
+            --dark-color: #1a1a2e;
+            --light-color: #f8f9fa;
+        }
+        
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: var(--light-color);
+            color: #333;
+        }
+        
+        .contact-container {
+            max-width: 1200px;
+            margin: 40px auto;
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 15px 30px rgba(0,0,0,0.1);
+        }
+        
+        .contact-header {
+            background: linear-gradient(135deg, var(--primary-color), var(--accent-color));
+            padding: 40px 30px;
+            color: white;
+            text-align: center;
+            position: relative;
+        }
+        
+        .contact-header::before {
+            content: "";
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 40px;
+            background-color: white;
+            border-radius: 50% 50% 0 0;
+        }
+        
+        .contact-header h1 {
+            font-weight: 700;
+            margin-bottom: 15px;
+            font-size: 2.8rem;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
+        }
+        
+        .contact-header p {
+            font-size: 1.2rem;
+            max-width: 600px;
+            margin: 0 auto;
+            opacity: 0.9;
+        }
+        
+        .contact-content {
+            background-color: white;
+            padding: 40px 30px;
+        }
+        
+        .contact-info-card {
+            background-color: var(--light-color);
+            border-radius: 15px;
+            padding: 30px;
+            height: 40%;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+        }
+        
+        .contact-info-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 30px rgba(142, 20, 20, 0.1);
+        }
+        
+        .contact-info-card h3 {
+            color: var(--primary-color);
+            font-weight: 600;
+            margin-bottom: 20px;
+            position: relative;
+            padding-bottom: 15px;
+        }
+        
+        .contact-info-card h3::after {
+            content: "";
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 50px;
+            height: 3px;
+            background-color: var(--accent-color);
+        }
+        
+        .contact-info-item {
+            display: flex;
+            margin-bottom: 15px;
+            align-items: center;
+        }
+        
+        .contact-icon {
+            width: 40px;
+            height: 40px;
+            background-color: var(--primary-color);
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 15px;
+            flex-shrink: 0;
+        }
+        
+        .contact-text {
+            color: #555;
+        }
+        
+        .contact-text strong {
+            display: block;
+            color: var(--dark-color);
+            margin-bottom: 3px;
+        }
+        
+        .map-container {
+            width: 100%;
+            height: 500px;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+        }
+        
+        .form-control {
+            border-radius: 10px;
+            padding: 12px 15px;
+            border: 1px solid #e1e1e1;
+            background-color: #f9f9f9;
+            transition: all 0.3s ease;
+        }
+        
+        .form-control:focus {
+            box-shadow: 0 0 0 3px rgba(67, 97, 238, 0.2);
+            border-color: var(--primary-color);
+            background-color: white;
+        }
+        
+        .form-label {
+            font-weight: 500;
+            color: var(--dark-color);
+        }
+        
+        .btn-primary {
+            background-color: var(--primary-color);
+            border: none;
+            padding: 12px 30px;
+            border-radius: 50px;
+            font-weight: 600;
+            letter-spacing: 1px;
+            box-shadow: 0 5px 15px rgba(67, 97, 238, 0.3);
+            transition: all 0.3s ease;
+        }
+        
+        .btn-primary:hover {
+            background-color: var(--secondary-color);
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(67, 97, 238, 0.4);
+        }
+        
+        .social-links {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-top: 40px;
+            padding: 20px;
+            background-color: var(--light-color);
+            border-radius: 15px;
+        }
+        
+        .social-icon {
+            width: 50px;
+            height: 50px;
+            background-color: white;
+            color: var(--primary-color);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+            transition: all 0.3s ease;
+        }
+        
+        .social-icon:hover {
+            background-color: var(--primary-color);
+            color: white;
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(67, 97, 238, 0.3);
+        }
+        
+        @media (max-width: 991px) {
+            .contact-info-section {
+                margin-bottom: 30px;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .contact-header h1 {
+                font-size: 2.2rem;
+            }
+            
+            .contact-header p {
+                font-size: 1rem;
+            }
+            
+            .contact-content {
+                padding: 30px 20px;
+            }
+            
+            .map-container {
+                height: 300px;
+                margin-bottom: 30px;
+            }
+        }
+        
+        @media (max-width: 576px) {
+            .contact-container {
+                margin: 20px 15px;
+            }
+            
+            .contact-header {
+                padding: 30px 20px;
+            }
+            
+            .contact-header h1 {
+                font-size: 1.8rem;
+            }
+            
+            .map-container {
+                height: 250px;
+            }
+            
+            .social-icon {
+                width: 40px;
+                height: 40px;
+                font-size: 16px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="contact-container">
+        <div class="contact-header">
+            <h1>Get In Touch</h1>
+            <p>Have questions or want to connect? Reach out to us using any of the methods below.</p>
+        </div>
+        
+        <div class="contact-content container">
+            <div class="row g-4">
+                <!-- Contact Information -->
+                <div class="col-lg-5 contact-info-section">
+                    <div class="contact-info-card">
+                        <h3>CONTACT INFORMATION</h3>
+                        
+                        <div class="contact-info-item">
+                            <div class="contact-icon">
+                                <i class="fas fa-user"></i>
+                            </div>
+                            <div class="contact-text">
+                                <strong>Name</strong>
+                                Suraj Nirala
+                            </div>
+                        </div>
+                        
+                        <div class="contact-info-item">
+                            <div class="contact-icon">
+                                <i class="fas fa-map-marker-alt"></i>
+                            </div>
+                            <div class="contact-text">
+                                <strong>Address</strong>
+                                Karamwa West Champaran, Bihar, 845454
+                            </div>
+                        </div>
+                        
+                        <div class="contact-info-item">
+                            <div class="contact-icon">
+                                <i class="fas fa-envelope"></i>
+                            </div>
+                            <div class="contact-text">
+                                <strong>Email</strong>
+                                <a href="mailto:surajk2072003@gmail.com" class="text-decoration-none">surajk2072003@gmail.com</a>
+                            </div>
+                        </div>
+                        
+                        <div class="contact-info-item">
+                            <div class="contact-icon">
+                                <i class="fas fa-phone-alt"></i>
+                            </div>
+                            <div class="contact-text">
+                                <strong>Phone</strong>
+                                <a href="tel:+919006192179" class="text-decoration-none">+91 900 619 2179</a>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Contact Form -->
+                    <div class="contact-form-card mt-4">
+                        <form class="row g-3">
+                            <div class="col-md-6">
+                                <label for="name" class="form-label">Your Name</label>
+                                <input type="text" class="form-control" id="name" required>
+                            </div>
+                            <div class="col-md-6">
+                                <label for="email" class="form-label">Email</label>
+                                <input type="email" class="form-control" id="email" required>
+                            </div>
+                            <div class="col-12">
+                                <label for="subject" class="form-label">Subject</label>
+                                <input type="text" class="form-control" id="subject">
+                            </div>
+                            <div class="col-12">
+                                <label for="message" class="form-label">Message</label>
+                                <textarea class="form-control" id="message" rows="4" required></textarea>
+                            </div>
+                            <div class="col-12">
+                                <button type="submit" class="btn btn-primary mt-2">
+                                    <i class="fas fa-paper-plane me-2"></i>Send Message
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+                
+                <!-- Map Section -->
+                <div class="col-lg-7">
+                    <div class="map-container mb-4">
+                        <iframe 
+                            src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d57547.84943698398!2d84.58353920514204!3d26.701686826667842!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x39ed5d556f1b53ab%3A0x91bbfca04df41e4e!2sWest%20Champaran%2C%20Bihar!5e0!3m2!1sen!2sin!4v1716285698323!5m2!1sen!2sin" 
+                            width="100%" 
+                            height="100%" 
+                            style="border:0;" 
+                            allowfullscreen="" 
+                            loading="lazy" 
+                            referrerpolicy="no-referrer-when-downgrade">
+                        </iframe>
+                    </div>
+                    
+                    <!-- Business Hours Card -->
+                    <div class="contact-info-card">
+                        <h3>Business Hours</h3>
+                        <div class="row g-3">
+                            <div class="col-md-6">
+                                <div class="d-flex justify-content-between py-2 border-bottom">
+                                    <span>Monday - Friday:</span>
+                                    <strong>9:00 AM - 6:00 PM</strong>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="d-flex justify-content-between py-2 border-bottom">
+                                    <span>Saturday:</span>
+                                    <strong>10:00 AM - 4:00 PM</strong>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="d-flex justify-content-between py-2 border-bottom">
+                                    <span>Sunday:</span>
+                                    <strong>Closed</strong>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="d-flex justify-content-between py-2 border-bottom">
+                                    <span>Holidays:</span>
+                                    <strong>By Appointment</strong>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Social Links -->
+            <div class="social-links mt-5">
+                <a href="https://www.facebook.com/share/BDTqpuJp3JszWJee/" class="social-icon" title="Facebook">
+                    <i class="fab fa-facebook-f"></i>
+                </a>
+                <a href="https://x.com/_surajnirala_?t=CUFtivQ_0o0ep0HB0_YiJQ&s=09" class="social-icon" title="Twitter">
+                    <i class="fab fa-twitter"></i>
+                </a>
+                <a href="https://www.instagram.com/_surajnirala_/profilecard/?igsh=MW85N3A5dGQxd2V4MA==" class="social-icon" title="Instagram">
+                    <i class="fab fa-instagram"></i>
+                </a>
+                <a href="https://www.linkedin.com/in/suraj-kumar-268403324?utm_source=share&utm_campaign=share_via&utm_content=profile&utm_medium=android_app" class="social-icon" title="LinkedIn">
+                    <i class="fab fa-linkedin-in"></i>
+                </a>
+                <a href="+919006192179" class="social-icon" title="WhatsApp">
+                    <i class="fab fa-whatsapp"></i>
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
