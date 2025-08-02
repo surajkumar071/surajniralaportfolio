@@ -1,0 +1,1246 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Search Engine</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+        }
+
+        body {
+            background: #f8f9fa;
+            overflow: hidden;
+        }
+
+        .browser-container {
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Tab Bar */
+        .tab-bar {
+            background: #dee1e6;
+            border-bottom: 1px solid #dadce0;
+            height: 36px;
+            display: flex;
+            align-items: center;
+            padding: 0 8px;
+        }
+
+        .tab {
+            background: #f1f3f4;
+            border: 1px solid #dadce0;
+            border-bottom: none;
+            border-radius: 8px 8px 0 0;
+            height: 32px;
+            min-width: 200px;
+            max-width: 240px;
+            display: flex;
+            align-items: center;
+            padding: 0 12px;
+            margin-right: 2px;
+            cursor: pointer;
+            position: relative;
+        }
+
+        .tab.active {
+            background: white;
+            border-color: #dadce0;
+        }
+
+        .tab-favicon {
+            width: 16px;
+            height: 16px;
+            margin-right: 8px;
+            background: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAABHNCSVQICAgIfAhkiAAAAAlwSFlzAAAAdgAAAHYBTnsmCAAAABl0RVh0U29mdHdhcmUAd3d3Lmlua3NjYXBlLm9yZ5vuPBoAAAFYSURBVDiNpZM9SwNBEIafgwTSWFhYWFhY2FhY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY') no-repeat center;
+            background-size: contain;
+        }
+
+        .tab-title {
+            flex: 1;
+            overflow: hidden;
+            white-space: nowrap;
+            text-overflow: ellipsis;
+            font-size: 12px;
+            color: #5f6368;
+        }
+
+        .tab-close {
+            width: 16px;
+            height: 16px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-left: 8px;
+            cursor: pointer;
+            font-size: 14px;
+            color: #5f6368;
+        }
+
+        .tab-close:hover {
+            background: #e8eaed;
+        }
+
+        .new-tab-btn {
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            background: transparent;
+            border: none;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            font-size: 16px;
+            color: #5f6368;
+            margin-left: 4px;
+        }
+
+        .new-tab-btn:hover {
+            background: #e8eaed;
+        }
+
+        /* Navigation Bar */
+        .nav-bar {
+            background: white;
+            border-bottom: 1px solid #e8eaed;
+            height: 48px;
+            display: flex;
+            align-items: center;
+            padding: 0 16px;
+            gap: 8px;
+        }
+
+        .nav-btn {
+            width: 32px;
+            height: 32px;
+            border: none;
+            background: transparent;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            color: #5f6368;
+            font-size: 16px;
+        }
+
+        .nav-btn:hover {
+            background: #f1f3f4;
+        }
+
+        .nav-btn:disabled {
+            color: #dadce0;
+            cursor: not-allowed;
+        }
+
+        .address-bar {
+            flex: 1;
+            height: 40px;
+            border: 1px solid #e8eaed;
+            border-radius: 20px;
+            padding: 0 20px;
+            font-size: 16px;
+            background: #f8f9fa;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            transition: all 0.2s ease;
+        }
+
+        .address-bar:hover {
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+
+        .address-input {
+            flex: 1;
+            border: none;
+            background: transparent;
+            outline: none;
+            font-size: 16px;
+        }
+
+        .security-icon {
+            color: #34a853;
+            font-size: 16px;
+        }
+
+        .menu-btn {
+            width: 32px;
+            height: 32px;
+            border: none;
+            background: transparent;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            color: #5f6368;
+            font-size: 16px;
+            margin-left: 8px;
+        }
+
+        .menu-btn:hover {
+            background: #f1f3f4;
+        }
+
+        /* Bookmark Bar */
+        .bookmark-bar {
+            background: white;
+            border-bottom: 1px solid #e8eaed;
+            height: 36px;
+            display: flex;
+            align-items: center;
+            padding: 0 16px;
+            gap: 12px;
+            font-size: 12px;
+        }
+
+        .bookmark {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            padding: 4px 8px;
+            border-radius: 4px;
+            cursor: pointer;
+            color: #5f6368;
+            text-decoration: none;
+        }
+
+        .bookmark:hover {
+            background: #f1f3f4;
+        }
+
+        .bookmark-icon {
+            width: 16px;
+            height: 16px;
+            background: #4285f4;
+            border-radius: 2px;
+            font-size: 10px;
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* Content Area */
+        .content-area {
+            flex: 1;
+            background: white;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        .page-content {
+            flex: 1;
+            padding: 20px;
+            overflow-y: auto;
+        }
+
+        /* Search Container */
+        .search-container {
+            max-width: 90%;
+            width: 800px;
+            margin: 50px auto;
+            text-align: center;
+        }
+
+        .google-logo {
+            font-size: clamp(36px, 8vw, 72px);
+            font-weight: 400;
+            color: #4285f4;
+            margin-bottom: 40px;
+            letter-spacing: -2px;
+        }
+
+        .google-logo .g1 { color: #4285f4; }
+        .google-logo .o1 { color: #ea4335; }
+        .google-logo .o2 { color: #fbbc05; }
+        .google-logo .g2 { color: #4285f4; }
+        .google-logo .l { color: #34a853; }
+        .google-logo .e { color: #ea4335; }
+
+        /* Search box styling */
+        .search-box {
+            position: relative;
+            margin: 30px 0;
+            width: 100%;
+            max-width: 584px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .search-input {
+            width: 100%;
+            height: 64px;
+            border: 2px solid #dfe1e5;
+            border-radius: 32px;
+            padding: 16px 24px;
+            font-size: 18px;
+            outline: none;
+            transition: all 0.3s ease;
+            box-shadow: 0 2px 5px 1px rgba(64,60,67,.16);
+        }
+
+        .search-input:hover {
+            box-shadow: 0 4px 12px 2px rgba(64,60,67,.24);
+            border-color: #4285f4;
+        }
+
+        .search-input:focus {
+            box-shadow: 0 4px 12px 2px rgba(64,60,67,.24);
+            border-color: #4285f4;
+        }
+
+        .search-buttons {
+            margin-top: 30px;
+            display: flex;
+            justify-content: center;
+            gap: 16px;
+            flex-wrap: wrap;
+        }
+
+        .search-btn {
+            background: #f8f9fa;
+            border: 1px solid #f8f9fa;
+            border-radius: 4px;
+            color: #3c4043;
+            font-size: 14px;
+            padding: 10px 20px;
+            cursor: pointer;
+            transition: all 0.1s ease;
+        }
+
+        .search-btn:hover {
+            box-shadow: 0 1px 1px rgba(0,0,0,.1);
+            border-color: #dadce0;
+        }
+
+        /* Search Results */
+        .search-results {
+            max-width: 600px;
+            margin: 0 auto;
+            text-align: left;
+        }
+
+        .search-result {
+            padding: 16px 0;
+            border-bottom: 1px solid #e8eaed;
+        }
+
+        .result-url {
+            color: #1a0dab;
+            font-size: 14px;
+            margin-bottom: 4px;
+        }
+
+        .result-title {
+            color: #1a0dab;
+            font-size: 20px;
+            line-height: 1.3;
+            margin-bottom: 4px;
+            cursor: pointer;
+            text-decoration: none;
+        }
+
+        .result-title:hover {
+            text-decoration: underline;
+        }
+
+        .result-snippet {
+            color: #4d5156;
+            font-size: 14px;
+            line-height: 1.58;
+        }
+
+        .loading {
+            text-align: center;
+            padding: 40px;
+            color: #5f6368;
+        }
+
+        .spinner {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 2px solid #f3f3f3;
+            border-top: 2px solid #4285f4;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin-right: 10px;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* Homepage content */
+        .homepage {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100%;
+            text-align: center;
+        }
+
+        .quick-links {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 20px;
+            margin-top: 40px;
+            max-width: 400px;
+        }
+
+        .quick-link {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 16px;
+            border-radius: 8px;
+            text-decoration: none;
+            color: #5f6368;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        .quick-link:hover {
+            background: #f8f9fa;
+        }
+
+        .quick-link-icon {
+            width: 48px;
+            height: 48px;
+            background: #4285f4;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 20px;
+            margin-bottom: 8px;
+        }
+
+        .quick-link-title {
+            font-size: 12px;
+            font-weight: 500;
+        }
+
+        /* Website iframe */
+        .website-frame {
+            width: 100%;
+            height: 100%;
+            border: none;
+            background: white;
+        }
+
+        /* Hidden elements */
+        .hidden {
+            display: none !important;
+        }
+
+        /* Responsive */
+        @media (max-width: 1024px) {
+            .nav-bar {
+                padding: 0 12px;
+                gap: 6px;
+            }
+            
+            .search-container {
+                width: 95%;
+                margin: 30px auto;
+            }
+            
+            .search-input {
+                height: 56px;
+                font-size: 16px;
+                padding: 14px 20px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .tab {
+                min-width: 100px;
+                max-width: 120px;
+                padding: 0 8px;
+            }
+            
+            .tab-title {
+                font-size: 11px;
+            }
+            
+            .bookmark-bar {
+                padding: 0 8px;
+                gap: 6px;
+                overflow-x: auto;
+                scrollbar-width: none;
+                -ms-overflow-style: none;
+            }
+            
+            .bookmark-bar::-webkit-scrollbar {
+                display: none;
+            }
+            
+            .bookmark {
+                flex-shrink: 0;
+                padding: 4px 6px;
+                font-size: 11px;
+            }
+            
+            .quick-links {
+                grid-template-columns: repeat(2, 1fr);
+                max-width: 300px;
+                gap: 16px;
+            }
+            
+            .nav-bar {
+                padding: 0 8px;
+                gap: 4px;
+            }
+            
+            .nav-btn, .menu-btn {
+                width: 28px;
+                height: 28px;
+                font-size: 14px;
+            }
+            
+            .address-bar {
+                height: 36px;
+                padding: 0 16px;
+                gap: 8px;
+            }
+            
+            .address-input {
+                font-size: 14px;
+            }
+            
+            .search-container {
+                margin: 20px auto;
+                padding: 0 16px;
+            }
+            
+            .search-input {
+                height: 48px;
+                font-size: 16px;
+                padding: 12px 18px;
+                border-radius: 24px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .tab-bar {
+                padding: 0 4px;
+            }
+            
+            .tab {
+                min-width: 80px;
+                max-width: 100px;
+                padding: 0 6px;
+            }
+            
+            .tab-title {
+                font-size: 10px;
+            }
+            
+            .new-tab-btn {
+                width: 24px;
+                height: 24px;
+                font-size: 14px;
+            }
+            
+            .bookmark-bar {
+                padding: 0 4px;
+                gap: 4px;
+            }
+            
+            .bookmark {
+                padding: 3px 4px;
+                font-size: 10px;
+            }
+            
+            .bookmark-icon {
+                width: 14px;
+                height: 14px;
+                font-size: 8px;
+            }
+            
+            .quick-links {
+                grid-template-columns: repeat(2, 1fr);
+                max-width: 280px;
+                gap: 12px;
+            }
+            
+            .quick-link-icon {
+                width: 40px;
+                height: 40px;
+                font-size: 18px;
+            }
+            
+            .quick-link-title {
+                font-size: 11px;
+            }
+            
+            .google-logo {
+                margin-bottom: 20px;
+            }
+            
+            .search-input {
+                height: 44px;
+                font-size: 15px;
+                padding: 10px 16px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="browser-container">
+        <!-- Tab Bar -->
+        <div class="tab-bar">
+            <div class="tab active" data-tab="home">
+                <div class="tab-favicon"></div>
+                <div class="tab-title">New Tab</div>
+                <div class="tab-close">×</div>
+            </div>
+            <button class="new-tab-btn">+</button>
+        </div>
+
+        <!-- Navigation Bar -->
+        <div class="nav-bar">
+            <button class="nav-btn" id="back-btn" disabled>←</button>
+            <button class="nav-btn" id="forward-btn" disabled>→</button>
+            <button class="nav-btn" id="refresh-btn">↻</button>
+            
+            <div class="address-bar">
+                <div class="security-icon">🔒</div>
+                <input type="text" class="address-input" placeholder="Search Google or type a URL" value="">
+            </div>
+            
+            <button class="nav-btn">⭐</button>
+            <button class="menu-btn">⋮</button>
+        </div>
+
+        <!-- Bookmark Bar -->
+        <div class="bookmark-bar">
+            <a href="#" class="bookmark" data-url="https://gmail.com">
+                <div class="bookmark-icon">G</div>
+                <span>Gmail</span>
+            </a>
+            <a href="#" class="bookmark" data-url="https://youtube.com">
+                <div class="bookmark-icon">Y</div>
+                <span>YouTube</span>
+            </a>
+            <a href="#" class="bookmark" data-url="https://maps.google.com">
+                <div class="bookmark-icon">M</div>
+                <span>Maps</span>
+            </a>
+            <a href="#" class="bookmark" data-url="https://drive.google.com">
+                <div class="bookmark-icon">D</div>
+                <span>Drive</span>
+            </a>
+            <a href="#" class="bookmark" data-url="https://news.google.com">
+                <div class="bookmark-icon">N</div>
+                <span>News</span>
+            </a>
+            <a href="#" class="bookmark" data-url="https://shopping.google.com">
+                <div class="bookmark-icon">S</div>
+                <span>Shopping</span>
+            </a>
+        </div>
+
+        <!-- Content Area -->
+        <div class="content-area">
+            <div class="page-content">
+                <!-- Homepage -->
+                <div id="homepage" class="homepage">
+                    <div class="google-logo">
+                        <span class="g1">S</span><span class="o1">E</span><span class="o2">A</span><span class="g2">R</span><span class="l">C</span><span class="e">H</span>
+                    </div>
+                    
+                    <div class="search-container">
+                        <div class="search-box">
+                            <input type="text" class="search-input" placeholder="Search the web..." id="main-search">
+                        </div>
+                        <div class="search-buttons">
+                            <button class="search-btn" onclick="performSearch()">Search</button>
+                            <button class="search-btn" onclick="feelingLucky()">I'm Feeling Lucky</button>
+                        </div>
+                    </div>
+                    
+                    <div class="quick-links">
+                        <a href="#" class="quick-link" data-url="https://gmail.com">
+                            <div class="quick-link-icon" style="background: #ea4335;">📧</div>
+                            <div class="quick-link-title">Gmail</div>
+                        </a>
+                        <a href="#" class="quick-link" data-url="https://youtube.com">
+                            <div class="quick-link-icon" style="background: #ff0000;">📹</div>
+                            <div class="quick-link-title">YouTube</div>
+                        </a>
+                        <a href="#" class="quick-link" data-url="https://maps.google.com">
+                            <div class="quick-link-icon" style="background: #34a853;">🗺️</div>
+                            <div class="quick-link-title">Maps</div>
+                        </a>
+                        <a href="#" class="quick-link" data-url="https://drive.google.com">
+                            <div class="quick-link-icon" style="background: #4285f4;">💾</div>
+                            <div class="quick-link-title">Drive</div>
+                        </a>
+                        <a href="#" class="quick-link" data-url="https://news.google.com">
+                            <div class="quick-link-icon" style="background: #fbbc05;">📰</div>
+                            <div class="quick-link-title">News</div>
+                        </a>
+                        <a href="#" class="quick-link" data-url="https://shopping.google.com">
+                            <div class="quick-link-icon" style="background: #34a853;">🛒</div>
+                            <div class="quick-link-title">Shopping</div>
+                        </a>
+                        <a href="#" class="quick-link" data-url="https://photos.google.com">
+                            <div class="quick-link-icon" style="background: #4285f4;">📷</div>
+                            <div class="quick-link-title">Photos</div>
+                        </a>
+                        <a href="#" class="quick-link" data-url="https://translate.google.com">
+                            <div class="quick-link-icon" style="background: #4285f4;">🌐</div>
+                            <div class="quick-link-title">Translate</div>
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Search Results -->
+                <div id="search-results" class="hidden">
+                    <div class="search-container">
+                        <div class="google-logo" style="font-size: 24px; margin-bottom: 20px;">
+                            <span class="g1">S</span><span class="o1">E</span><span class="o2">A</span><span class="g2">R</span><span class="l">C</span><span class="e">H</span>
+                        </div>
+                        <div class="search-box">
+                            <input type="text" class="search-input" id="results-search">
+                        </div>
+                    </div>
+                    <div class="search-results" id="results-container"></div>
+                </div>
+
+                <!-- Website Frame -->
+                <div id="website-container" class="hidden">
+                    <iframe class="website-frame" id="website-frame" src=""></iframe>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        class ChromeBrowser {
+            constructor() {
+                this.tabs = [];
+                this.activeTabId = 'home';
+                this.history = [];
+                this.historyIndex = -1;
+                this.bookmarks = [
+                    { title: 'Gmail', url: 'https://gmail.com', icon: 'G' },
+                    { title: 'YouTube', url: 'https://youtube.com', icon: 'Y' },
+                    { title: 'Maps', url: 'https://maps.google.com', icon: 'M' },
+                    { title: 'Drive', url: 'https://drive.google.com', icon: 'D' },
+                    { title: 'News', url: 'https://news.google.com', icon: 'N' },
+                    { title: 'Shopping', url: 'https://shopping.google.com', icon: 'S' }
+                ];
+                
+                this.init();
+            }
+
+            init() {
+                this.setupEventListeners();
+                this.updateNavigationButtons();
+                this.tabs.push({
+                    id: 'home',
+                    title: 'New Tab',
+                    url: 'chrome://newtab',
+                    active: true
+                });
+            }
+
+            setupEventListeners() {
+                // Address bar
+                const addressInput = document.querySelector('.address-input');
+                addressInput.addEventListener('keypress', (e) => {
+                    if (e.key === 'Enter') {
+                        this.navigate(e.target.value);
+                    }
+                });
+
+                addressInput.addEventListener('focus', () => {
+                    addressInput.select();
+                });
+
+                // Main search input
+                const mainSearch = document.getElementById('main-search');
+                mainSearch.addEventListener('keypress', (e) => {
+                    if (e.key === 'Enter') {
+                        this.performSearch(e.target.value);
+                    }
+                });
+
+                // Results search input
+                const resultsSearch = document.getElementById('results-search');
+                resultsSearch.addEventListener('keypress', (e) => {
+                    if (e.key === 'Enter') {
+                        this.performSearch(e.target.value);
+                    }
+                });
+
+                // Navigation buttons
+                document.getElementById('back-btn').addEventListener('click', () => this.goBack());
+                document.getElementById('forward-btn').addEventListener('click', () => this.goForward());
+                document.getElementById('refresh-btn').addEventListener('click', () => this.refresh());
+
+                // New tab button
+                document.querySelector('.new-tab-btn').addEventListener('click', () => this.createNewTab());
+
+                // Tab close buttons
+                document.addEventListener('click', (e) => {
+                    if (e.target.classList.contains('tab-close')) {
+                        e.stopPropagation();
+                        const tab = e.target.closest('.tab');
+                        this.closeTab(tab.dataset.tab);
+                    }
+                });
+
+                // Tab switching
+                document.addEventListener('click', (e) => {
+                    if (e.target.closest('.tab')) {
+                        const tab = e.target.closest('.tab');
+                        this.switchTab(tab.dataset.tab);
+                    }
+                });
+
+                // Quick links
+                document.addEventListener('click', (e) => {
+                    if (e.target.closest('.quick-link')) {
+                        e.preventDefault();
+                        const link = e.target.closest('.quick-link');
+                        const url = link.dataset.url;
+                        if (url) {
+                            this.navigate(url);
+                        }
+                    }
+                });
+
+                // Bookmarks
+                document.addEventListener('click', (e) => {
+                    if (e.target.closest('.bookmark')) {
+                        e.preventDefault();
+                        const bookmark = e.target.closest('.bookmark');
+                        const url = bookmark.dataset.url;
+                        if (url) {
+                            this.navigate(url);
+                        }
+                    }
+                });
+            }
+
+            navigate(input) {
+                let url = input.trim();
+                
+                if (!url) return;
+
+                // Add to history
+                this.addToHistory(url);
+
+                // Update address bar
+                document.querySelector('.address-input').value = url;
+
+                // Update tab title
+                const activeTab = document.querySelector('.tab.active .tab-title');
+                if (url.startsWith('http')) {
+                    try {
+                        const domain = new URL(url).hostname;
+                        activeTab.textContent = domain.replace('www.', '');
+                    } catch {
+                        activeTab.textContent = 'Search Results';
+                    }
+                } else {
+                    activeTab.textContent = 'Search Results';
+                }
+
+                // Show search results for non-URL inputs or load URL
+                if (!this.isValidUrl(url)) {
+                    this.performSearch(url);
+                } else {
+                    this.loadUrl(url);
+                }
+
+                this.updateNavigationButtons();
+            }
+
+            isValidUrl(string) {
+                try {
+                    new URL(string);
+                    return true;
+                } catch (_) {
+                    return string.includes('.') && !string.includes(' ') && string.length > 3;
+                }
+            }
+
+            async performSearch(query) {
+                if (!query) query = document.getElementById('main-search').value || document.getElementById('results-search').value;
+                if (!query.trim()) return;
+
+                // Hide other content
+                this.hideAllContent();
+                
+                // Show search results page
+                document.getElementById('search-results').classList.remove('hidden');
+                
+                // Update search input in results page
+                document.getElementById('results-search').value = query;
+                document.querySelector('.address-input').value = query;
+                
+                // Show loading
+                const resultsContainer = document.getElementById('results-container');
+                resultsContainer.innerHTML = `
+                    <div class="loading">
+                        <div class="spinner"></div>
+                        Searching for "${query}"...
+                    </div>
+                `;
+
+                try {
+                    // Use DuckDuckGo Instant Answer API for search results
+                    const searchResults = await this.searchWeb(query);
+                    this.displaySearchResults(searchResults, query);
+                } catch (error) {
+                    console.error('Search error:', error);
+                    this.displaySearchResults([], query);
+                }
+            }
+
+            async searchWeb(query) {
+                // Since we can't use external APIs directly due to CORS, we'll generate mock results
+                // In a real implementation, you'd use a proxy server or search API
+                return new Promise((resolve) => {
+                    setTimeout(() => {
+                        const mockResults = this.generateMockResults(query);
+                        resolve(mockResults);
+                    }, 1000);
+                });
+            }
+
+            generateMockResults(query) {
+                const results = [
+                    {
+                        title: `${query} - Wikipedia`,
+                        url: `https://en.wikipedia.org/wiki/${query.replace(/\s+/g, '_')}`,
+                        snippet: `Learn about ${query} on Wikipedia. Wikipedia is a free online encyclopedia, created and edited by volunteers around the world and hosted by the Wikimedia Foundation.`
+                    },
+                    {
+                        title: `${query} - Official Website`,
+                        url: `https://www.${query.toLowerCase().replace(/\s+/g, '')}.com`,
+                        snippet: `Official website for ${query}. Find the latest information, news, and updates about ${query} directly from the source.`
+                    },
+                    {
+                        title: `What is ${query}? - Definition and Meaning`,
+                        url: `https://www.dictionary.com/browse/${query.replace(/\s+/g, '-')}`,
+                        snippet: `Definition of ${query}: Comprehensive explanation and meaning of ${query} with examples, synonyms, and related terms.`
+                    },
+                    {
+                        title: `${query} News - Latest Updates`,
+                        url: `https://news.google.com/search?q=${encodeURIComponent(query)}`,
+                        snippet: `Latest news and updates about ${query}. Stay informed with the most recent developments and breaking news stories.`
+                    },
+                    {
+                        title: `${query} Images - Photo Gallery`,
+                        url: `https://images.google.com/search?q=${encodeURIComponent(query)}`,
+                        snippet: `Browse high-quality images and photos related to ${query}. Find the perfect picture for your needs from millions of results.`
+                    },
+                    {
+                        title: `${query} Videos - Watch Online`,
+                        url: `https://www.youtube.com/results?search_query=${encodeURIComponent(query)}`,
+                        snippet: `Watch videos about ${query} on YouTube. Discover tutorials, reviews, documentaries, and more video content.`
+                    },
+                    {
+                        title: `${query} Reviews and Ratings`,
+                        url: `https://www.reviews.com/search/${query.replace(/\s+/g, '-')}`,
+                        snippet: `Read authentic reviews and ratings for ${query}. Make informed decisions based on real user experiences and expert opinions.`
+                    },
+                    {
+                        title: `${query} - Complete Guide`,
+                        url: `https://www.howtogeek.com/search/${query.replace(/\s+/g, '+')}`,
+                        snippet: `Complete guide to ${query}. Learn everything you need to know with step-by-step instructions and helpful tips.`
+                    }
+                ];
+
+                return results.map(result => ({
+                    ...result,
+                    displayUrl: new URL(result.url).hostname
+                }));
+            }
+
+            displaySearchResults(results, query) {
+                const resultsContainer = document.getElementById('results-container');
+                
+                if (results.length === 0) {
+                    resultsContainer.innerHTML = `
+                        <div style="text-align: center; padding: 40px; color: #5f6368;">
+                            <h3>No results found for "${query}"</h3>
+                            <p style="margin-top: 10px;">Try different keywords or check your spelling.</p>
+                        </div>
+                    `;
+                    return;
+                }
+
+                const resultsHtml = results.map(result => `
+                    <div class="search-result">
+                        <div class="result-url">${result.displayUrl}</div>
+                        <a href="#" class="result-title" onclick="window.browser.navigate('${result.url}')">${result.title}</a>
+                        <div class="result-snippet">${result.snippet}</div>
+                    </div>
+                `).join('');
+
+                resultsContainer.innerHTML = `
+                    <div style="color: #5f6368; margin-bottom: 20px; padding-left: 20px;">
+                        About ${results.length} results (${(Math.random() * 0.5 + 0.2).toFixed(2)} seconds)
+                    </div>
+                    ${resultsHtml}
+                `;
+            }
+
+            loadUrl(url) {
+                this.hideAllContent();
+                
+                // Show website container
+                const websiteContainer = document.getElementById('website-container');
+                const websiteFrame = document.getElementById('website-frame');
+                
+                websiteContainer.classList.remove('hidden');
+                
+                // Try to load the URL in iframe
+                try {
+                    websiteFrame.src = url;
+                    
+                    // Handle iframe load errors
+                    websiteFrame.onload = () => {
+                        // Successfully loaded
+                        console.log('Website loaded successfully');
+                    };
+                    
+                    websiteFrame.onerror = () => {
+                        this.showUrlPlaceholder(url);
+                    };
+                    
+                    // Fallback for CORS issues
+                    setTimeout(() => {
+                        try {
+                            // Test if iframe content is accessible
+                            websiteFrame.contentDocument;
+                        } catch (e) {
+                            // CORS error - show placeholder
+                            this.showUrlPlaceholder(url);
+                        }
+                    }, 3000);
+                    
+                } catch (error) {
+                    this.showUrlPlaceholder(url);
+                }
+            }
+
+            showUrlPlaceholder(url) {
+                const websiteContainer = document.getElementById('website-container');
+                websiteContainer.innerHTML = `
+                    <div style="display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100%; text-align: center; padding: 40px; color: #5f6368;">
+                        <div style="font-size: 64px; margin-bottom: 20px;">🌐</div>
+                        <h2 style="margin-bottom: 16px;">${url}</h2>
+                        <p style="margin-bottom: 24px; max-width: 500px;">
+                            This website cannot be displayed in an embedded frame due to security restrictions. 
+                            Click the button below to open it in a new tab.
+                        </p>
+                        <button onclick="window.open('${url}', '_blank')" 
+                                style="padding: 12px 24px; background: #4285f4; color: white; border: none; border-radius: 6px; cursor: pointer; font-size: 16px; transition: background 0.2s;"
+                                onmouseover="this.style.background='#3367d6'"
+                                onmouseout="this.style.background='#4285f4'">
+                            Open in New Tab
+                        </button>
+                        <div style="margin-top: 20px;">
+                            <button onclick="window.browser.showHomepage()" 
+                                    style="padding: 8px 16px; background: #f8f9fa; color: #3c4043; border: 1px solid #dadce0; border-radius: 4px; cursor: pointer; margin-right: 10px;">
+                                Back to Home
+                            </button>
+                            <button onclick="window.browser.goBack()" 
+                                    style="padding: 8px 16px; background: #f8f9fa; color: #3c4043; border: 1px solid #dadce0; border-radius: 4px; cursor: pointer;">
+                                Go Back
+                            </button>
+                        </div>
+                    </div>
+                `;
+            }
+
+            hideAllContent() {
+                document.getElementById('homepage').classList.add('hidden');
+                document.getElementById('search-results').classList.add('hidden');
+                document.getElementById('website-container').classList.add('hidden');
+            }
+
+            addToHistory(url) {
+                this.history = this.history.slice(0, this.historyIndex + 1);
+                this.history.push(url);
+                this.historyIndex = this.history.length - 1;
+            }
+
+            goBack() {
+                if (this.historyIndex > 0) {
+                    this.historyIndex--;
+                    const url = this.history[this.historyIndex];
+                    document.querySelector('.address-input').value = url;
+                    if (this.isValidUrl(url)) {
+                        this.loadUrl(url);
+                    } else {
+                        this.performSearch(url);
+                    }
+                    this.updateNavigationButtons();
+                } else {
+                    this.showHomepage();
+                }
+            }
+
+            goForward() {
+                if (this.historyIndex < this.history.length - 1) {
+                    this.historyIndex++;
+                    const url = this.history[this.historyIndex];
+                    document.querySelector('.address-input').value = url;
+                    if (this.isValidUrl(url)) {
+                        this.loadUrl(url);
+                    } else {
+                        this.performSearch(url);
+                    }
+                    this.updateNavigationButtons();
+                }
+            }
+
+            refresh() {
+                const currentUrl = document.querySelector('.address-input').value;
+                if (currentUrl) {
+                    this.navigate(currentUrl);
+                } else {
+                    location.reload();
+                }
+            }
+
+            updateNavigationButtons() {
+                const backBtn = document.getElementById('back-btn');
+                const forwardBtn = document.getElementById('forward-btn');
+                
+                backBtn.disabled = this.historyIndex <= 0;
+                forwardBtn.disabled = this.historyIndex >= this.history.length - 1;
+            }
+
+            createNewTab() {
+                const tabId = 'tab-' + Date.now();
+                const tabBar = document.querySelector('.tab-bar');
+                const newTabBtn = document.querySelector('.new-tab-btn');
+                
+                // Create new tab element
+                const tabElement = document.createElement('div');
+                tabElement.className = 'tab';
+                tabElement.dataset.tab = tabId;
+                tabElement.innerHTML = `
+                    <div class="tab-favicon"></div>
+                    <div class="tab-title">New Tab</div>
+                    <div class="tab-close">×</div>
+                `;
+                
+                tabBar.insertBefore(tabElement, newTabBtn);
+                
+                // Add to tabs array
+                this.tabs.push({
+                    id: tabId,
+                    title: 'New Tab',
+                    url: 'chrome://newtab',
+                    active: false
+                });
+                
+                // Switch to new tab
+                this.switchTab(tabId);
+            }
+
+            switchTab(tabId) {
+                // Update active states
+                document.querySelectorAll('.tab').forEach(tab => {
+                    tab.classList.remove('active');
+                });
+                
+                document.querySelector(`[data-tab="${tabId}"]`).classList.add('active');
+                
+                this.activeTabId = tabId;
+                
+                // Reset to homepage for new tabs
+                if (tabId !== 'home') {
+                    this.showHomepage();
+                    document.querySelector('.address-input').value = '';
+                    this.history = [];
+                    this.historyIndex = -1;
+                    this.updateNavigationButtons();
+                }
+            }
+
+            closeTab(tabId) {
+                const tabElement = document.querySelector(`[data-tab="${tabId}"]`);
+                
+                if (document.querySelectorAll('.tab').length === 1) {
+                    // Don't close the last tab
+                    return;
+                }
+                
+                const wasActive = tabElement.classList.contains('active');
+                tabElement.remove();
+                
+                // Remove from tabs array
+                this.tabs = this.tabs.filter(tab => tab.id !== tabId);
+                
+                // If closed tab was active, switch to another tab
+                if (wasActive) {
+                    const remainingTabs = document.querySelectorAll('.tab');
+                    if (remainingTabs.length > 0) {
+                        this.switchTab(remainingTabs[0].dataset.tab);
+                    }
+                }
+            }
+
+            showHomepage() {
+                this.hideAllContent();
+                document.getElementById('homepage').classList.remove('hidden');
+                document.querySelector('.address-input').value = '';
+                
+                // Update tab title
+                const activeTab = document.querySelector('.tab.active .tab-title');
+                if (activeTab) {
+                    activeTab.textContent = 'New Tab';
+                }
+            }
+        }
+
+        // Global functions for button clicks
+        function performSearch() {
+            const query = document.getElementById('main-search').value;
+            if (query.trim()) {
+                window.browser.performSearch(query);
+            }
+        }
+
+        function feelingLucky() {
+            const query = document.getElementById('main-search').value;
+            if (query.trim()) {
+                // Simulate "I'm Feeling Lucky" by going to the first result
+                const luckyUrl = `https://www.google.com/search?q=${encodeURIComponent(query)}&btnI=1`;
+                window.browser.navigate(luckyUrl);
+            }
+        }
+
+        // Initialize browser when page loads
+        document.addEventListener('DOMContentLoaded', () => {
+            window.browser = new ChromeBrowser();
+        });
+    </script>
+</body>
+</html>
